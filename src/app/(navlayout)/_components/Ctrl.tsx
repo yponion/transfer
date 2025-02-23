@@ -43,16 +43,12 @@ export default function Ctrl({ platform }: Props) {
   const [selectedKind, setSelectedKind] = useState("");
   const [selectedTicket, setSelectedTicket] = useState("");
 
-  const reset = () => {
+  const fetch = async () => {
     setTicket([]);
     setFilterTimeTicket([]);
     setKind([]);
     setSelectedKind("");
     setSelectedTicket("");
-  };
-
-  const fetch = async () => {
-    reset();
     if (!startPlatform || !arrivePlatform) return;
     const depPlaceId = platform.find(
       (v) => v.nodename === startPlatform
@@ -230,7 +226,10 @@ export default function Ctrl({ platform }: Props) {
           <select
             className="size-full px-2 bg-transparent rounded-xl"
             value={selectedKind}
-            onChange={(e) => setSelectedKind(e.target.value)}
+            onChange={(e) => {
+              setSelectedKind(e.target.value);
+              setSelectedTicket("");
+            }}
           >
             <option value={""}>열차 전체</option>
             {kind.map((v) => (
