@@ -3,6 +3,7 @@
 import { getTicket } from "@/app/api/train";
 import type { Platform, Ticket } from "@/type";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 interface Props {
   platform: Platform[];
@@ -37,37 +38,32 @@ export default function Ctrl({ platform }: Props) {
   const [selectedHour, setSelectedHour] = useState(now.getHours().toString());
   const [selectedMin, setSelectedMin] = useState(now.getMinutes().toString());
   const [ticket, setTicket] = useState<Ticket[]>([]);
-  const [FilterTicket, setFilterTicket] = useState<Ticket[]>([]);
+  const [filterTimeTicket, setFilterTimeTicket] = useState<Ticket[]>([]);
   const [kind, setKind] = useState<string[]>([]);
   const [selectedKind, setSelectedKind] = useState("");
+  const [selectedTicket, setSelectedTicket] = useState("");
 
   const reset = () => {
     setTicket([]);
-    setFilterTicket([]);
+    setFilterTimeTicket([]);
     setKind([]);
     setSelectedKind("");
+    setSelectedTicket("");
   };
 
   const fetch = async () => {
-    if (!startPlatform || !arrivePlatform) {
-      reset();
-      return;
-    }
+    reset();
+    if (!startPlatform || !arrivePlatform) return;
     const depPlaceId = platform.find(
       (v) => v.nodename === startPlatform
     )?.nodeid;
     const arrPlaceId = platform.find(
       (v) => v.nodename === arrivePlatform
     )?.nodeid;
-    if (!depPlaceId || !arrPlaceId) {
-      reset();
-      return;
-    }
+    if (!depPlaceId || !arrPlaceId) return;
     const ticket = await getTicket(depPlaceId, arrPlaceId, date);
-    if (!ticket) {
-      reset();
-      return;
-    }
+    if (!ticket) return;
+
     setTicket(ticket);
     const targetTime = Number(
       date + selectedHour.padStart(2, "0") + selectedMin.padStart(2, "0") + "00"
@@ -75,17 +71,13 @@ export default function Ctrl({ platform }: Props) {
     const index = ticket.findIndex((v) => {
       return v.depplandtime >= targetTime;
     });
-    if (index === -1) {
-      setFilterTicket([]);
-      setKind([]);
-      return;
-    }
+    if (index === -1) return;
 
-    const filterTicket = ticket.slice(index);
-    setFilterTicket(filterTicket);
+    const filterTimeTicket = ticket.slice(index);
+    setFilterTimeTicket(filterTimeTicket);
 
     const set = new Set<string>();
-    filterTicket.forEach((v) => set.add(v.traingradename));
+    filterTimeTicket.forEach((v) => set.add(v.traingradename));
     setKind([...set]);
   };
 
@@ -94,6 +86,11 @@ export default function Ctrl({ platform }: Props) {
   }, [date, startPlatform, arrivePlatform]);
 
   useEffect(() => {
+    setFilterTimeTicket([]);
+    setKind([]);
+    setSelectedKind("");
+    setSelectedTicket("");
+
     if (ticket.length <= 0) return;
     const targetTime = Number(
       date + selectedHour.padStart(2, "0") + selectedMin.padStart(2, "0") + "00"
@@ -101,29 +98,68 @@ export default function Ctrl({ platform }: Props) {
     const index = ticket.findIndex((v) => {
       return v.depplandtime >= targetTime;
     });
-    if (index === -1) {
-      setFilterTicket([]);
-      setKind([]);
-      return;
-    }
-    const filterTicket = ticket.slice(index);
-    console.log("filterTicket", filterTicket);
-    setFilterTicket(filterTicket);
+    if (index === -1) return;
+
+    const filterTimeTicket = ticket.slice(index);
+    setFilterTimeTicket(filterTimeTicket);
 
     const set = new Set<string>();
-    filterTicket.forEach((v) => set.add(v.traingradename));
+    filterTimeTicket.forEach((v) => set.add(v.traingradename));
     setKind([...set]);
   }, [selectedHour, selectedMin]);
 
   const setP = () => {
-    if (!startPlatform && !arrivePlatform) return "역을 선택 하세요";
-    if (!startPlatform) return "출발역을 선택 하세요";
-    if (!arrivePlatform) return "도착역을 선택 하세요";
-    return `[ ${startPlatform} ] → [ ${arrivePlatform} ] 직행 열차 없음`;
+    if (!startPlatform && !arrivePlatform) return "역을 선택 하세요.";
+    if (!startPlatform) return "출발역을 선택 하세요.";
+    if (!arrivePlatform) return "도착역을 선택 하세요.";
+    return "해당 조건에 맞는 열차가 없습니다.";
+  };
+
+  const getTime = (num: number) => {
+    const str = num.toString();
+    const res = str.slice(-6, -4) + ":" + str.slice(-4, -2);
+    return res;
+  };
+
+  const mkDate = (num: number) => {
+    const str = num.toString();
+    return dayjs(`${str.slice(0, 4)}/${str.slice(4, 6)}/${str.slice(6, 8)} 
+    ${str.slice(8, 10)}:${str.slice(10, 12)}:${str.slice(12, 14)} `);
+  };
+
+  const getDifTime = (start: number, end: number) => {
+    const startDate = mkDate(start);
+    const endDate = mkDate(end);
+    return endDate.diff(startDate, "minute");
+  };
+
+  const setT = () => {
+    return selectedKind === ""
+      ? filterTimeTicket.map((v, i) => (
+          <option key={i} value={i}>
+            {`${v.traingradename} / 
+            ${getTime(v.depplandtime)} ~ 
+            ${getTime(v.arrplandtime)} (${getDifTime(
+              v.depplandtime,
+              v.arrplandtime
+            )}분 소요)`}
+          </option>
+        ))
+      : filterTimeTicket
+          .filter((v) => v.traingradename === selectedKind)
+          .map((v, i) => (
+            <option key={i} value={i}>
+              {`${getTime(v.depplandtime)} ~ 
+              ${getTime(v.arrplandtime)} (${getDifTime(
+                v.depplandtime,
+                v.arrplandtime
+              )}분 소요)`}
+            </option>
+          ));
   };
 
   return (
-    <div className="w-full max-w-[500px] h-[200px] rounded-xl border border-[rgb(138,138,138)]">
+    <div className="w-full max-w-[500px] h-[250px] rounded-xl border border-[rgb(138,138,138)]">
       <div className="h-[50px] border-b border-[rgb(232,232,232)]">
         {/* 날짜 */}
         <select
@@ -188,7 +224,7 @@ export default function Ctrl({ platform }: Props) {
           onChange={(e) => setArrivePlatform(e.target.value)}
         />
       </div>
-      <div className="h-[50px]">
+      <div className="h-[50px] border-b border-[rgb(232,232,232)]">
         {/* 기차 종류 선택 */}
         {kind.length > 0 ? (
           <select
@@ -196,12 +232,32 @@ export default function Ctrl({ platform }: Props) {
             value={selectedKind}
             onChange={(e) => setSelectedKind(e.target.value)}
           >
-            <option value={""}>최소 대기</option>
+            <option value={""}>열차 전체</option>
             {kind.map((v) => (
               <option key={v} value={v}>
                 {v}
               </option>
             ))}
+          </select>
+        ) : (
+          <p
+            className="size-full text-center leading-[50px]"
+            style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
+          >
+            {setP()}
+          </p>
+        )}
+      </div>
+      <div className="h-[50px]">
+        {/* 티켓 선택 */}
+        {filterTimeTicket.length > 0 ? (
+          <select
+            className="size-full px-2 bg-transparent rounded-xl"
+            value={selectedTicket}
+            onChange={(e) => setSelectedTicket(e.target.value)}
+          >
+            <option value={""}>선택</option>
+            {setT()}
           </select>
         ) : (
           <p
