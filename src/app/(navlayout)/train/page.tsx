@@ -3,21 +3,64 @@
 import { useEffect, useRef, useState } from "react";
 import Ctrl from "../_components/Ctrl";
 import View from "../_components/View";
-import { getCityCode, getKind, getPlatform } from "@/app/api/train";
-import type { Platform, CityCode, Kind } from "@/type";
+import { getCityCode, getPlatform } from "@/app/api/train";
+import type { Platform, CityCode, Schedule } from "@/type";
+import { v4 as uuidv4 } from "uuid";
+import { getYMDHM } from "@/lib/date";
 
 export default function Home() {
   const [positionY, setPositionY] = useState(0);
   const [pressed, setPressed] = useState(false);
   const handleRef = useRef<HTMLDivElement>(null);
 
-  const [kind, setKind] = useState<Kind[]>([]);
   const [platform, setPlatform] = useState<Platform[]>([]);
 
+  /* 일정 */
+  const [schedules, setSchedules] = useState<Schedule[]>([
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: null,
+    },
+  ]);
+
+  /** 일정 추가 */
+  const addSchedule = (id: string) => {
+    const index = schedules.findIndex((schedule) => schedule.id === id);
+    if (index === -1) return;
+    const value = schedules.toSpliced(index + 1, 0, {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: null,
+    });
+    setSchedules(value);
+  };
+
+  /** 일정 편집 */
+  const updateSchedule = (newSchedule: Schedule) => {
+    const index = schedules.findIndex(
+      (schedule) => schedule.id === newSchedule.id
+    );
+    if (index === -1) return;
+    const value = schedules.toSpliced(index, 1, newSchedule);
+    setSchedules(value);
+  };
+
+  /** 일정 제거 */
+  const removeSchedule = (id: string) => {
+    setSchedules(schedules.filter((schedule) => schedule.id !== id));
+  };
+
+  /* 기차역 데이터 fetching */
   useEffect(() => {
     async function fetch() {
-      const [kind, cityCode] = await Promise.all([getKind(), getCityCode()]);
-      setKind(kind);
+      const cityCode = await getCityCode();
       const platform = await Promise.all(
         cityCode.map(async (v: CityCode) => {
           return await getPlatform(v.citycode);
@@ -29,10 +72,10 @@ export default function Home() {
           .sort((a, b) => a.nodename.localeCompare(b.nodename, "ko"))
       );
     }
-
     fetch();
   }, []);
 
+  /* mobile 사이즈 조절 */
   useEffect(() => {
     // 마우스 및 터치 공통 처리 함수
     const handleMove = (y: number) => {
@@ -92,22 +135,26 @@ export default function Home() {
             : undefined,
         }}
       >
-        <div className="flex gap-10 flex-col items-center">
+        <div className="flex flex-col items-center">
           <datalist id="platform">
             {platform.map((v) => (
               <option key={v.nodeid} value={v.nodename} />
             ))}
           </datalist>
-          <Ctrl platform={platform} />
-          {/* <Ctrl />
-          <Ctrl />
-          <Ctrl />
-          <Ctrl /> */}
-          <button className="rounded-full bg-red-300 size-20">+</button>
+          {schedules.map((schedule) => (
+            <Ctrl
+              key={schedule.id}
+              schedule={schedule}
+              platform={platform}
+              addSchedule={addSchedule}
+              removeSchedule={removeSchedule}
+              updateSchedule={updateSchedule}
+            />
+          ))}
         </div>
       </div>
 
-      {/* 드래그 핸들 */}
+      {/* 사이즈 조절 핸들 */}
       <div
         className="absolute bottom-[calc((100dvh-4rem)/2-0.5px)] lg:hidden w-full h-6 bg-white rounded-t-full flex justify-center items-center cursor-row-resize"
         onMouseDown={() => setPressed(true)}
