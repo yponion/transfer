@@ -113,9 +113,9 @@ export default function Ctrl({
 
   return (
     <>
-      <div className="w-full max-w-[500px] h-[250px] rounded-xl border border-[rgb(138,138,138)] animate-expand">
+      <div className="w-full max-w-[500px] h-64 rounded-xl border border-[rgb(138,138,138)] animate-expand">
         {/* 날짜 선택 */}
-        <div className="h-[50px] border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
           {/* 날짜 */}
           <select
             className="w-1/3 h-full px-2 bg-transparent rounded-xl"
@@ -176,7 +176,7 @@ export default function Ctrl({
         </div>
 
         {/* 출발 역 선택 */}
-        <div className="h-[50px] border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
           <input
             className="size-full px-2 bg-transparent rounded-xl"
             type="text"
@@ -190,7 +190,7 @@ export default function Ctrl({
         </div>
 
         {/* 도착 역 선택 */}
-        <div className="h-[50px] border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
           <input
             className="size-full px-2 bg-transparent rounded-xl"
             type="text"
@@ -204,7 +204,7 @@ export default function Ctrl({
         </div>
 
         {/* 기차 종류 선택 */}
-        <div className="h-[50px] border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
           {trainList().length > 0 ? (
             <select
               className="size-full px-2 bg-transparent rounded-xl"
@@ -231,7 +231,7 @@ export default function Ctrl({
         </div>
 
         {/* 티켓 선택 */}
-        <div className="h-[50px]">
+        <div className="h-1/5">
           {filterTrainTickets().length > 0 ? (
             <select
               className="size-full px-2 bg-transparent rounded-xl"
@@ -265,7 +265,7 @@ export default function Ctrl({
           )}
         </div>
       </div>
-
+      {/* 일정 추가 버튼 */}
       <button
         className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-300 hover:border-gray-400 group
           ${isClicked ? "animate-expand" : ""}`}
@@ -279,6 +279,8 @@ export default function Ctrl({
           <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
         </svg>
       </button>
+
+      {/* 일정 제거 버튼 */}
       {/* <button
         className="w-full my-3 max-w-[100px] h-[50px] rounded-full bg-red-300 hover:bg-blue-300"
         onClick={() => removeSchedule(schedule.id)}

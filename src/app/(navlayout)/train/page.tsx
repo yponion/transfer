@@ -15,7 +15,7 @@ export default function Home() {
 
   const [platform, setPlatform] = useState<Platform[]>([]);
 
-  /* 일정 */
+  /* 일정 */ // todo id, ticket만 있어도 될 듯 한데, 나머지는 자식으로 내릴지 말지 판단
   const [schedules, setSchedules] = useState<Schedule[]>([
     {
       id: uuidv4(),
@@ -182,11 +182,9 @@ export default function Home() {
         }}
       >
         <div className="flex gap-10 flex-col items-center ">
-          <View />
-          <View />
-          <View />
-          <View />
-          <View />
+          {schedules.map((schedule) => (
+            <View key={schedule.id} ticket={schedule.ticket} />
+          ))}
         </div>
       </div>
     </div>
