@@ -54,20 +54,25 @@ export default function Ctrl({
     setTickets(ticket);
   };
 
+  // todo dev 아래 if 문 안의 updateScheduel 디자인테스트를 위해 임시 주석 처리
+
   /* 날짜, 출발역, 도착역 중에 하나라도 수정되면 데이터 가져옴 */
   useEffect(() => {
     fetchData(); // todo reactquery로 loading 처리
+    // if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
   }, [schedule.startTime.ymd, schedule.startName, schedule.endName]);
 
-  /* 시간 또는 분이 수정되면 선택된 열차, 티켓 초기화 */
+  /* 시간 또는 분이 수정되면 선택된 열차, 선택된 티켓 초기화 */
   useEffect(() => {
     setSelectedTrainName("");
     setSelectedTicket(0);
+    // if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
   }, [schedule.startTime.hour, schedule.startTime.minute]);
 
-  /* 선택된 열차가 바뀌면 티켓 초기화 */
+  /* 선택된 열차가 바뀌면 선택된 티켓 초기화 */
   useEffect(() => {
     setSelectedTicket(0);
+    // if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
   }, [selectedTrainName]);
 
   /* 티켓을 선택하면 일정에 추가 */
@@ -247,11 +252,7 @@ export default function Ctrl({
                       : ""
                   } 
                     ${getTime(ticket.depplandtime)} ~ 
-                    ${getTime(ticket.arrplandtime)} (
-                    ${getDifTime(
-                      ticket.depplandtime,
-                      ticket.arrplandtime
-                    )}분 소요)`}
+                    ${getTime(ticket.arrplandtime)}`}
                 </option>
               ))}
             </select>
@@ -280,7 +281,7 @@ export default function Ctrl({
         </svg>
       </button>
 
-      {/* 일정 제거 버튼 */}
+      {/* todo dev 일정 제거 버튼 */}
       {/* <button
         className="w-full my-3 max-w-[100px] h-[50px] rounded-full bg-red-300 hover:bg-blue-300"
         onClick={() => removeSchedule(schedule.id)}

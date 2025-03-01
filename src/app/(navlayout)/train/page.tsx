@@ -7,6 +7,7 @@ import { getCityCode, getPlatform } from "@/app/api/train";
 import type { Platform, CityCode, Schedule } from "@/type";
 import { v4 as uuidv4 } from "uuid";
 import { getYMDHM } from "@/lib/date";
+import Gap from "../_components/Gap";
 
 export default function Home() {
   const [positionY, setPositionY] = useState(0);
@@ -16,6 +17,18 @@ export default function Home() {
   const [platform, setPlatform] = useState<Platform[]>([]);
 
   /* 일정 */ // todo id, ticket만 있어도 될 듯 한데, 나머지는 자식으로 내릴지 말지 판단
+  // const [schedules, setSchedules] = useState<Schedule[]>([
+  //   {
+  //     id: uuidv4(),
+  //     startTime: getYMDHM(new Date()),
+  //     startName: "",
+  //     endName: "",
+  //     trainName: "",
+  //     ticket: null,
+  //   },
+  // ]);
+
+  // todo dev 디자인 확인을 위한 더미데이터
   const [schedules, setSchedules] = useState<Schedule[]>([
     {
       id: uuidv4(),
@@ -23,7 +36,151 @@ export default function Home() {
       startName: "",
       endName: "",
       trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
       ticket: null,
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
+    },
+    {
+      id: uuidv4(),
+      startTime: getYMDHM(new Date()),
+      startName: "",
+      endName: "",
+      trainName: "",
+      ticket: {
+        adultcharge: 1000,
+        arrplacename: "영천",
+        depplacename: "동대구",
+        depplandtime: 20250101101000,
+        arrplandtime: 20250101101000,
+        traingradename: "ktx",
+        trainno: 1,
+      },
     },
   ]);
 
@@ -181,11 +338,19 @@ export default function Home() {
             : undefined,
         }}
       >
-        <div className="flex gap-10 flex-col items-center ">
-          {schedules.map((schedule) => (
-            <View key={schedule.id} ticket={schedule.ticket} />
-          ))}
-        </div>
+        <ol className="flex flex-col items-center">
+          {schedules.map((schedule, index) => {
+            return (
+              <li key={schedule.id} className="w-full max-w-[500px]">
+                <View ticket={schedule.ticket} />
+                <Gap
+                  currentTicket={schedule.ticket}
+                  nextTicket={schedules[index + 1]?.ticket}
+                />
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </div>
   );
