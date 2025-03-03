@@ -17,18 +17,6 @@ export default function Home() {
   const [platform, setPlatform] = useState<Platform[]>([]);
 
   /* 일정 */ // todo id, ticket만 있어도 될 듯 한데, 나머지는 자식으로 내릴지 말지 판단
-  // const [schedules, setSchedules] = useState<Schedule[]>([
-  //   {
-  //     id: uuidv4(),
-  //     startTime: getYMDHM(new Date()),
-  //     startName: "",
-  //     endName: "",
-  //     trainName: "",
-  //     ticket: null,
-  //   },
-  // ]);
-
-  // todo dev 디자인 확인을 위한 더미데이터
   const [schedules, setSchedules] = useState<Schedule[]>([
     {
       id: uuidv4(),
@@ -36,151 +24,7 @@ export default function Home() {
       startName: "",
       endName: "",
       trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
       ticket: null,
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
-    },
-    {
-      id: uuidv4(),
-      startTime: getYMDHM(new Date()),
-      startName: "",
-      endName: "",
-      trainName: "",
-      ticket: {
-        adultcharge: 1000,
-        arrplacename: "영천",
-        depplacename: "동대구",
-        depplandtime: 20250101101000,
-        arrplandtime: 20250101101000,
-        traingradename: "ktx",
-        trainno: 1,
-      },
     },
   ]);
 
@@ -283,7 +127,7 @@ export default function Home() {
     <div className="select-none relative flex w-dvw justify-center max-lg:flex-col max-lg:min-h-[calc(100dvh-4rem)] lg:w-[calc(100dvw-4rem)]">
       {/* Ctrl 영역 */}
       <div
-        className="max-lg:bg-gray-50 p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 +
@@ -313,7 +157,7 @@ export default function Home() {
 
       {/* 사이즈 조절 핸들 */}
       <div
-        className="absolute bottom-[calc((100dvh-4rem)/2-0.5px)] lg:hidden w-full h-6 bg-white rounded-t-full flex justify-center items-center cursor-row-resize"
+        className="absolute bottom-[calc((100dvh-4rem)/2-0.5px)] lg:hidden w-full h-6 bg-white dark:bg-black rounded-t-full flex justify-center items-center cursor-row-resize"
         onMouseDown={() => setPressed(true)}
         onTouchStart={() => {
           setPressed(true);
@@ -329,7 +173,7 @@ export default function Home() {
 
       {/* View 영역 */}
       <div
-        className="p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="max-lg:bg-white dark:max-lg:bg-black p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 -
