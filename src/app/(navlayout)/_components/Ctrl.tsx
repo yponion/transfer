@@ -116,7 +116,7 @@ export default function Ctrl({
 
   return (
     <>
-      <div className="w-full max-w-[500px] h-64 rounded-xl border border-[rgb(138,138,138)] animate-expand">
+      <div className="w-full max-w-[500px] h-64 rounded-xl border border-gray-300 dark:border-gray-700 animate-expand">
         {/* 날짜 선택 */}
         <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
           {/* 날짜 */}
@@ -295,12 +295,12 @@ export default function Ctrl({
       </div>
       {/* 일정 추가 버튼 */}
       <button
-        className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-300 hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 group
+        className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700 group flex justify-center items-center
           ${isClicked ? "animate-expand" : ""}`}
         onClick={onClickAddSchedule}
       >
         <svg
-          className="size-8 justify-self-center fill-gray-300 group-hover:fill-gray-400 dark:fill-gray-700 dark:group-hover:fill-gray-500"
+          className="size-8 fill-gray-200 group-hover:fill-gray-300 dark:fill-gray-800 dark:group-hover:fill-gray-700"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
         >
