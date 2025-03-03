@@ -35,7 +35,7 @@ export default function Ctrl({
     setTimeout(() => setIsClicked(false), 200); //  애니메이션 클래스 제거
   };
 
-  /** 역 이름으로 역 ID 반환 */
+  /** 역 이름으로 역 ID 화반환 */
   const getPlatformId = (startPlatform: string) => {
     return platform.find((v) => v.nodename === startPlatform)?.nodeid;
   };
@@ -180,30 +180,61 @@ export default function Ctrl({
 
         {/* 출발 역 선택 */}
         <div className="h-1/5 border-b border-[rgb(232,232,232)]">
-          <input
-            className="size-full px-2 bg-transparent rounded-xl"
-            type="text"
-            list="platform"
-            placeholder="출발역"
-            value={schedule.startName}
-            onChange={(e) =>
-              updateSchedule({ ...schedule, startName: e.target.value })
-            }
-          />
+          <div className="flex items-center  size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              className="dark:fill-white ml-2"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M23 1L1 9.38095L8.61601 12.7658L15.0952 8.90476L11.2342 15.384L14.619 23L23 1Z"
+              />
+            </svg>
+            <input
+              className="size-full px-2 bg-transparent rounded-xl outline-none"
+              type="text"
+              list="platform"
+              placeholder="출발역"
+              value={schedule.startName}
+              onChange={(e) =>
+                updateSchedule({ ...schedule, startName: e.target.value })
+              }
+            />
+          </div>
         </div>
 
         {/* 도착 역 선택 */}
         <div className="h-1/5 border-b border-[rgb(232,232,232)]">
-          <input
-            className="size-full px-2 bg-transparent rounded-xl"
-            type="text"
-            list="platform"
-            placeholder="도착역"
-            value={schedule.endName}
-            onChange={(e) =>
-              updateSchedule({ ...schedule, endName: e.target.value })
-            }
-          />
+          <div className="flex items-center  size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="24"
+              viewBox="0 0 20 24"
+              className="ml-2"
+            >
+              <path
+                className="dark:fill-white"
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M10 24L17.0711 16.9705C18.4696 15.5802 19.422 13.8089 19.8079 11.8805C20.1937 9.95211 19.9957 7.95329 19.2388 6.13679C18.4819 4.3203 17.2002 2.76771 15.5557 1.67537C13.9112 0.583034 11.9778 0 10 0C8.02219 0 6.0888 0.583034 4.44431 1.67537C2.79982 2.76771 1.5181 4.3203 0.761221 6.13679C0.00434094 7.95329 -0.193699 9.95211 0.192143 11.8805C0.577985 13.8089 1.53038 15.5802 2.92889 16.9705L10 24ZM10 13C11.6569 13 13 11.6569 13 10C13 8.34315 11.6569 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6569 8.34315 13 10 13Z"
+              />
+            </svg>
+            <input
+              className="size-full px-2 bg-transparent rounded-xl outline-none"
+              type="text"
+              list="platform"
+              placeholder="도착역"
+              value={schedule.endName}
+              onChange={(e) =>
+                updateSchedule({ ...schedule, endName: e.target.value })
+              }
+            />
+          </div>
         </div>
 
         {/* 기차 종류 선택 */}
