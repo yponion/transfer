@@ -118,10 +118,10 @@ export default function Ctrl({
     <>
       <div className="w-full max-w-[500px] h-64 rounded-xl border border-[rgb(138,138,138)] animate-expand">
         {/* 날짜 선택 */}
-        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
           {/* 날짜 */}
           <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl"
+            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
             value={schedule.startTime.ymd}
             onChange={(e) => {
               updateSchedule({
@@ -141,7 +141,7 @@ export default function Ctrl({
 
           {/* 시간 */}
           <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl"
+            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
             value={schedule.startTime.hour}
             onChange={(e) => {
               updateSchedule({
@@ -152,16 +152,14 @@ export default function Ctrl({
           >
             {Array.from({ length: 24 }).map((_, i) => (
               <option key={i} value={i.toString().padStart(2, "0")}>
-                {`${i}시 (${i < 12 ? "오전" : "오후"}${(i % 12)
-                  .toString()
-                  .padStart(2, "0")})`}
+                {`${i.toString().padStart(2, "0")}시`}
               </option>
             ))}
           </select>
 
           {/* 분 */}
           <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl"
+            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
             value={schedule.startTime.minute}
             onChange={(e) => {
               updateSchedule({
@@ -179,8 +177,8 @@ export default function Ctrl({
         </div>
 
         {/* 출발 역 선택 */}
-        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
-          <div className="flex items-center  size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -208,8 +206,8 @@ export default function Ctrl({
         </div>
 
         {/* 도착 역 선택 */}
-        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
-          <div className="flex items-center  size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -238,10 +236,10 @@ export default function Ctrl({
         </div>
 
         {/* 기차 종류 선택 */}
-        <div className="h-1/5 border-b border-[rgb(232,232,232)]">
+        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
           {trainList().length > 0 ? (
             <select
-              className="size-full px-2 bg-transparent rounded-xl"
+              className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
               value={selectedTrainName}
               onChange={(e) => {
                 setSelectedTrainName(e.target.value);
@@ -268,7 +266,7 @@ export default function Ctrl({
         <div className="h-1/5">
           {filterTrainTickets().length > 0 ? (
             <select
-              className="size-full px-2 bg-transparent rounded-xl"
+              className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
               value={selectedTicket}
               onChange={(e) => setSelectedTicket(Number(e.target.value))}
             >
@@ -297,12 +295,12 @@ export default function Ctrl({
       </div>
       {/* 일정 추가 버튼 */}
       <button
-        className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-300 hover:border-gray-400 group
+        className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-300 hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500 group
           ${isClicked ? "animate-expand" : ""}`}
         onClick={onClickAddSchedule}
       >
         <svg
-          className="size-8 justify-self-center fill-gray-300 group-hover:fill-gray-400"
+          className="size-8 justify-self-center fill-gray-300 group-hover:fill-gray-400 dark:fill-gray-700 dark:group-hover:fill-gray-500"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
         >
