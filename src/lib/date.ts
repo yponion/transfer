@@ -40,3 +40,15 @@ export const getDifTime = (start: number, end: number) => {
   const endDate = mkDate(end);
   return endDate.diff(startDate, "minute");
 };
+
+/** 분을 (분) 또는 (n시간 n분) 또는 (n일 n시간 n분) 형식으로 반환, 0보다 작으면 -1  */
+export const formatDuration = (minute: number): string | number => {
+  if (minute < 0) return -1
+  if (minute < 60) return `${minute}분`
+  const hours = Math.floor(minute / 60);
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+  const remainingMinutes = minute % 60;
+  if (days > 0) return `${days}일 ${remainingHours}시간 ${remainingMinutes}분`;
+  else return `${hours}시간 ${remainingMinutes}분`;
+}
