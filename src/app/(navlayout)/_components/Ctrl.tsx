@@ -2,8 +2,8 @@
 
 import { getTicket } from "@/app/api/train";
 import type { Platform, Schedule, Ticket } from "@/type";
-import { useEffect, useState } from "react";
-import { getDifTime, getTime, getYMDList } from "@/lib/date";
+import { useEffect, useMemo, useState } from "react";
+import { getTime, getYMDList } from "@/lib/date";
 
 interface Props {
   schedule: Schedule;
@@ -107,12 +107,12 @@ export default function Ctrl({
   };
 
   /** 역 선택 여부 + 열차 검색 결과 메시지 반환 */
-  const platformSelectionMessage = () => {
+  const platformSelectionMessage = useMemo(() => {
     if (!schedule.startName && !schedule.endName) return "역을 선택 하세요.";
     if (!schedule.startName) return "출발역을 선택 하세요.";
     if (!schedule.endName) return "도착역을 선택 하세요.";
     return "조건에 맞는 열차가 없습니다.";
-  };
+  }, [schedule.startName, schedule.endName]);
 
   return (
     <>
@@ -228,7 +228,7 @@ export default function Ctrl({
               className="size-full text-center leading-[50px]"
               style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
             >
-              {platformSelectionMessage()}
+              {platformSelectionMessage}
             </p>
           )}
         </div>
@@ -259,7 +259,7 @@ export default function Ctrl({
               className="size-full text-center leading-[50px]"
               style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
             >
-              {platformSelectionMessage()}
+              {platformSelectionMessage}
             </p>
           )}
         </div>
