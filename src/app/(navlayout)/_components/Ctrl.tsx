@@ -54,23 +54,28 @@ export default function Ctrl({
     setTickets(ticket);
   };
 
+  /** 스케줄에 티켓이 있으면 초기화 */
+  const resetTicket = () => {
+    if (schedule.ticket) updateSchedule({ ...schedule, ticket: null });
+  };
+
   /* 날짜, 출발역, 도착역 중에 하나라도 수정되면 데이터 가져옴 */
   useEffect(() => {
     fetchData(); // todo reactquery로 loading 처리
-    if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
+    resetTicket();
   }, [schedule.startTime.ymd, schedule.startName, schedule.endName]);
 
   /* 시간 또는 분이 수정되면 선택된 열차, 선택된 티켓 초기화 */
   useEffect(() => {
     setSelectedTrainName("");
     setSelectedTicket(0);
-    if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
+    resetTicket();
   }, [schedule.startTime.hour, schedule.startTime.minute]);
 
   /* 선택된 열차가 바뀌면 선택된 티켓 초기화 */
   useEffect(() => {
     setSelectedTicket(0);
-    if (schedule.ticket) updateSchedule({ ...schedule, ticket: null }); // 스케줄에 티켓이 있으면 초기화
+    resetTicket();
   }, [selectedTrainName]);
 
   /* 티켓을 선택하면 일정에 추가 */
