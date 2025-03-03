@@ -12,7 +12,7 @@ export default function Gap({ currentTicket, nextTicket }: Props) {
       {currentTicket &&
       nextTicket &&
       getDifTime(currentTicket.arrplandtime, nextTicket.depplandtime) > 0 ? (
-        <div className="flex items-center justify-end flex-1 border-r-2 border-gray-500 border-dotted relative h-[130] top-[-21px] z-10">
+        <div className="flex items-center justify-end flex-1 border-r-2 border-gray-500 border-dotted relative h-[130px] top-[-21px] z-10">
           {/* 환승 대기 시간 */}
           <small className="pr-3 font-xs text-gray-500">
             {formatDuration(
