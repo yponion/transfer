@@ -3,18 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import Ctrl from "../_components/Ctrl";
 import View from "../_components/View";
-import { getCityCode, getPlatform } from "@/app/api/train";
-import type { Platform, CityCode, Schedule } from "@/type";
+import type { Schedule } from "@/type";
 import { v4 as uuidv4 } from "uuid";
 import { getYMDHM } from "@/lib/date";
 import Gap from "../_components/Gap";
+import { usePlatform } from "@/app/hooks/usePlatform";
 
 export default function Home() {
   const [positionY, setPositionY] = useState(0);
   const [pressed, setPressed] = useState(false);
   const handleRef = useRef<HTMLDivElement>(null);
-
-  const [platform, setPlatform] = useState<Platform[]>([]);
 
   /* 일정 */ // todo id, ticket만 있어도 될 듯 한데, 나머지는 자식으로 내릴지 말지 판단
   const [schedules, setSchedules] = useState<Schedule[]>([
@@ -58,23 +56,7 @@ export default function Home() {
     setSchedules(schedules.filter((schedule) => schedule.id !== id));
   };
 
-  /* 기차역 데이터 fetching */
-  useEffect(() => {
-    async function fetch() {
-      const cityCode = await getCityCode();
-      const platform = await Promise.all(
-        cityCode.map(async (v: CityCode) => {
-          return await getPlatform(v.citycode);
-        })
-      );
-      setPlatform(
-        platform
-          .flat()
-          .sort((a, b) => a.nodename.localeCompare(b.nodename, "ko"))
-      );
-    }
-    fetch();
-  }, []);
+  const { data: platform = [] } = usePlatform();
 
   /* mobile 사이즈 조절 */
   useEffect(() => {

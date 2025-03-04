@@ -1,9 +1,10 @@
 "use client";
 
-import { getTicket } from "@/app/api/train";
-import type { Platform, Schedule, Ticket } from "@/type";
-import { useEffect, useMemo, useState } from "react";
+import type { Platform, Schedule } from "@/type";
+import { useEffect, useState } from "react";
 import { getTime, getYMDList } from "@/lib/date";
+import { useTicket } from "@/app/hooks/useTicket";
+import { PropagateLoader } from "react-spinners";
 
 interface Props {
   schedule: Schedule;
@@ -20,7 +21,6 @@ export default function Ctrl({
   updateSchedule,
   platform,
 }: Props) {
-  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [selectedTrainName, setSelectedTrainName] = useState<string>("");
   const [selectedTicket, setSelectedTicket] = useState<number>(0);
 
@@ -36,34 +36,29 @@ export default function Ctrl({
   };
 
   /** 역 이름으로 역 ID 화반환 */
-  const getPlatformId = (startPlatform: string) => {
-    return platform.find((v) => v.nodename === startPlatform)?.nodeid;
+  const getPlatformId = (platformName: string) => {
+    if (platformName)
+      return platform.find((v) => v.nodename === platformName)?.nodeid;
   };
 
-  /** 출발 시간, 출발역, 도착역 으로 티켓 데이터 가져오기 */
-  const fetchData = async () => {
-    setTickets([]);
-    setSelectedTrainName("");
-    setSelectedTicket(0);
-    if (!schedule.startName || !schedule.endName) return; // 출발역 또는 도착역 필드가 비어있다면 return
-    const startId = getPlatformId(schedule.startName);
-    const endId = getPlatformId(schedule.endName);
-    if (!startId || !endId) return; // 출발역 또는 도착역 필드가 유효한 값이 아니라면 return
-    const ticket = await getTicket(startId, endId, schedule.startTime.ymd);
-    if (!ticket) return; // 해당 날짜에 출발역에서 도착역으로 가는 티켓이 없다면 return
-    setTickets(ticket);
-  };
+  /** RQ로 티켓들을 받아옴 */
+  const { data: tickets = [], isLoading } = useTicket(
+    getPlatformId(schedule.startName) ?? "",
+    getPlatformId(schedule.endName) ?? "",
+    schedule.startTime.ymd ?? ""
+  );
 
   /** 스케줄에 티켓이 있으면 초기화 */
   const resetTicket = () => {
     if (schedule.ticket) updateSchedule({ ...schedule, ticket: null });
   };
 
-  /* 날짜, 출발역, 도착역 중에 하나라도 수정되면 데이터 가져옴 */
+  /* 날짜, 출발역, 도착역 중에 하나라도 수정되면 tickets가 바뀜 -> 선택 초기화  */
   useEffect(() => {
-    fetchData(); // todo reactquery로 loading 처리
+    setSelectedTrainName("");
+    setSelectedTicket(0);
     resetTicket();
-  }, [schedule.startTime.ymd, schedule.startName, schedule.endName]);
+  }, [tickets]);
 
   /* 시간 또는 분이 수정되면 선택된 열차, 선택된 티켓 초기화 */
   useEffect(() => {
@@ -111,13 +106,14 @@ export default function Ctrl({
     );
   };
 
-  /** 역 선택 여부 + 열차 검색 결과 메시지 반환 */
-  const platformSelectionMessage = useMemo(() => {
+  const platformSelectionMessage = () => {
     if (!schedule.startName && !schedule.endName) return "역을 선택 하세요.";
     if (!schedule.startName) return "출발역을 선택 하세요.";
     if (!schedule.endName) return "도착역을 선택 하세요.";
+    if (isLoading)
+      return <PropagateLoader color="rgb(37, 99, 235)" className="pt-5" />;
     return "조건에 맞는 열차가 없습니다.";
-  }, [schedule.startName, schedule.endName]);
+  };
 
   return (
     <>
@@ -262,7 +258,7 @@ export default function Ctrl({
               className="size-full text-center leading-[50px]"
               style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
             >
-              {platformSelectionMessage}
+              {platformSelectionMessage()}
             </p>
           )}
         </div>
@@ -293,7 +289,7 @@ export default function Ctrl({
               className="size-full text-center leading-[50px]"
               style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
             >
-              {platformSelectionMessage}
+              {platformSelectionMessage()}
             </p>
           )}
         </div>
