@@ -60,7 +60,7 @@ export const getTicket = async (depPlaceId: string, arrPlaceId: string, depPland
     }
   });
   if (res.status !== 200) throw new Error("Failed to fetch city code data");
-  return res.data.response.body.items.item;
+  return res.data.response.body.items.item || [];
 };
 
 
