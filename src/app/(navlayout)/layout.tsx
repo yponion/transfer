@@ -1,5 +1,4 @@
 import Nav from "@/app/(navlayout)/_components/Nav";
-import RQProvider from "./_components/RQProvider";
 
 export default function NavLayout({
   children,
@@ -10,7 +9,7 @@ export default function NavLayout({
     <>
       <Nav />
       <div className="max-lg:mb-16 max-lg:min-h-[calc(100dvh-4rem)] lg:ml-16 lg:min-h-dvh overflow-x-hidden">
-        <RQProvider>{children}</RQProvider>
+        {children}
       </div>
     </>
   );
