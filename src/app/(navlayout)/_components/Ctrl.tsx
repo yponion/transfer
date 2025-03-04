@@ -183,7 +183,7 @@ export default function Ctrl({
 
         {/* 출발 역 선택 */}
         <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+          <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -207,12 +207,12 @@ export default function Ctrl({
                 updateSchedule({ ...schedule, startName: e.target.value })
               }
             />
-          </div>
+          </label>
         </div>
 
         {/* 도착 역 선택 */}
         <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+          <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -237,7 +237,7 @@ export default function Ctrl({
                 updateSchedule({ ...schedule, endName: e.target.value })
               }
             />
-          </div>
+          </label>
         </div>
 
         {/* 기차 종류 선택 */}
