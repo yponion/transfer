@@ -5,11 +5,21 @@ import { useEffect, useState } from "react";
 import { getTime, getYMDList } from "@/lib/date";
 import { useTicket } from "@/app/hooks/useTicket";
 import { PropagateLoader } from "react-spinners";
+import Send from "@/assets/send.svg";
+import Pin from "@/assets/pin.svg";
+import {
+  SwipeableList,
+  SwipeableListItem,
+  SwipeAction,
+  TrailingActions,
+} from "react-swipeable-list";
+import "react-swipeable-list/dist/styles.css";
+import AddScheduleBtn from "./AddScheduleBtn";
 
 interface Props {
   schedule: Schedule;
   platform: Platform[];
-  addSchedule: (id: string) => void;
+  addSchedule: (id: string | undefined) => void;
   removeSchedule: (id: string) => void;
   updateSchedule: (schedule: Schedule) => void;
 }
@@ -115,207 +125,186 @@ export default function Ctrl({
     return "조건에 맞는 열차가 없습니다.";
   };
 
+  const trailingActions = () => (
+    <TrailingActions>
+      <SwipeAction
+        destructive={true}
+        onClick={() => {
+          removeSchedule(schedule.id);
+        }}
+      >
+        <div className="bg-red-500 rounded-xl">
+          <span className="text-nowrap absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            삭제
+          </span>
+        </div>
+      </SwipeAction>
+    </TrailingActions>
+  );
+
   return (
     <>
-      <div className="w-full max-w-[500px] h-64 rounded-xl border border-gray-300 dark:border-gray-700 animate-expand">
-        {/* 날짜 선택 */}
-        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          {/* 날짜 */}
-          <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
-            value={schedule.startTime.ymd}
-            onChange={(e) => {
-              updateSchedule({
-                ...schedule,
-                startTime: { ...schedule.startTime, ymd: e.target.value },
-              });
-            }}
-          >
-            {ymdList.map((ymd, i) => (
-              <option key={ymd} value={ymd}>
-                {`${ymd.slice(4, 6)}월 ${ymd.slice(6, 8)}일${
-                  i === 0 ? " (오늘)" : ""
-                }`}
-              </option>
-            ))}
-          </select>
-
-          {/* 시간 */}
-          <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
-            value={schedule.startTime.hour}
-            onChange={(e) => {
-              updateSchedule({
-                ...schedule,
-                startTime: { ...schedule.startTime, hour: e.target.value },
-              });
-            }}
-          >
-            {Array.from({ length: 24 }).map((_, i) => (
-              <option key={i} value={i.toString().padStart(2, "0")}>
-                {`${i.toString().padStart(2, "0")}시`}
-              </option>
-            ))}
-          </select>
-
-          {/* 분 */}
-          <select
-            className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
-            value={schedule.startTime.minute}
-            onChange={(e) => {
-              updateSchedule({
-                ...schedule,
-                startTime: { ...schedule.startTime, minute: e.target.value },
-              });
-            }}
-          >
-            {Array.from({ length: 60 }).map((_, i) => (
-              <option key={i} value={i.toString().padStart(2, "0")}>
-                {`${i}분`}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* 출발 역 선택 */}
-        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              className="dark:fill-white ml-2"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M23 1L1 9.38095L8.61601 12.7658L15.0952 8.90476L11.2342 15.384L14.619 23L23 1Z"
-              />
-            </svg>
-            <input
-              className="size-full px-2 bg-transparent rounded-xl outline-none"
-              type="text"
-              list="platform"
-              placeholder="출발역"
-              value={schedule.startName}
-              onChange={(e) =>
-                updateSchedule({ ...schedule, startName: e.target.value })
-              }
-            />
-          </label>
-        </div>
-
-        {/* 도착 역 선택 */}
-        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="24"
-              viewBox="0 0 20 24"
-              className="ml-2"
-            >
-              <path
-                className="dark:fill-white"
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M10 24L17.0711 16.9705C18.4696 15.5802 19.422 13.8089 19.8079 11.8805C20.1937 9.95211 19.9957 7.95329 19.2388 6.13679C18.4819 4.3203 17.2002 2.76771 15.5557 1.67537C13.9112 0.583034 11.9778 0 10 0C8.02219 0 6.0888 0.583034 4.44431 1.67537C2.79982 2.76771 1.5181 4.3203 0.761221 6.13679C0.00434094 7.95329 -0.193699 9.95211 0.192143 11.8805C0.577985 13.8089 1.53038 15.5802 2.92889 16.9705L10 24ZM10 13C11.6569 13 13 11.6569 13 10C13 8.34315 11.6569 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6569 8.34315 13 10 13Z"
-              />
-            </svg>
-            <input
-              className="size-full px-2 bg-transparent rounded-xl outline-none"
-              type="text"
-              list="platform"
-              placeholder="도착역"
-              value={schedule.endName}
-              onChange={(e) =>
-                updateSchedule({ ...schedule, endName: e.target.value })
-              }
-            />
-          </label>
-        </div>
-
-        {/* 기차 종류 선택 */}
-        <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
-          {trainList().length > 0 ? (
-            <select
-              className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
-              value={selectedTrainName}
-              onChange={(e) => {
-                setSelectedTrainName(e.target.value);
-              }}
-            >
-              <option value={""}>열차 전체</option>
-              {trainList().map((trainName) => (
-                <option key={trainName} value={trainName}>
-                  {trainName}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <p
-              className="size-full text-center leading-[50px]"
-              style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
-            >
-              {platformSelectionMessage()}
-            </p>
-          )}
-        </div>
-
-        {/* 티켓 선택 */}
-        <div className="h-1/5">
-          {filterTrainTickets().length > 0 ? (
-            <select
-              className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
-              value={selectedTicket}
-              onChange={(e) => setSelectedTicket(Number(e.target.value))}
-            >
-              <option value={0}>선택</option>
-              {filterTrainTickets().map((ticket) => (
-                <option key={ticket.trainno} value={ticket.trainno}>
-                  {`${
-                    selectedTrainName === ""
-                      ? ticket.traingradename + " / "
-                      : ""
-                  } 
-                    ${getTime(ticket.depplandtime)} ~ 
-                    ${getTime(ticket.arrplandtime)}`}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <p
-              className="size-full text-center leading-[50px]"
-              style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
-            >
-              {platformSelectionMessage()}
-            </p>
-          )}
-        </div>
+      <div className="w-full max-w-[500px] h-64">
+        <SwipeableList>
+          <SwipeableListItem trailingActions={trailingActions()}>
+            <div className="w-full max-w-[500px] h-64 rounded-xl border border-gray-300 dark:border-gray-700 animate-expand">
+              {/* 날짜 선택 */}
+              <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+                {/* 날짜 */}
+                <select
+                  className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
+                  value={schedule.startTime.ymd}
+                  onChange={(e) => {
+                    updateSchedule({
+                      ...schedule,
+                      startTime: { ...schedule.startTime, ymd: e.target.value },
+                    });
+                  }}
+                >
+                  {ymdList.map((ymd, i) => (
+                    <option key={ymd} value={ymd}>
+                      {`${ymd.slice(4, 6)}월 ${ymd.slice(6, 8)}일${
+                        i === 0 ? " (오늘)" : ""
+                      }`}
+                    </option>
+                  ))}
+                </select>
+                {/* 시간 */}
+                <select
+                  className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
+                  value={schedule.startTime.hour}
+                  onChange={(e) => {
+                    updateSchedule({
+                      ...schedule,
+                      startTime: {
+                        ...schedule.startTime,
+                        hour: e.target.value,
+                      },
+                    });
+                  }}
+                >
+                  {Array.from({ length: 24 }).map((_, i) => (
+                    <option key={i} value={i.toString().padStart(2, "0")}>
+                      {`${i.toString().padStart(2, "0")}시`}
+                    </option>
+                  ))}
+                </select>
+                {/* 분 */}
+                <select
+                  className="w-1/3 h-full px-2 bg-transparent rounded-xl cursor-pointer"
+                  value={schedule.startTime.minute}
+                  onChange={(e) => {
+                    updateSchedule({
+                      ...schedule,
+                      startTime: {
+                        ...schedule.startTime,
+                        minute: e.target.value,
+                      },
+                    });
+                  }}
+                >
+                  {Array.from({ length: 60 }).map((_, i) => (
+                    <option key={i} value={i.toString().padStart(2, "0")}>
+                      {`${i}분`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* 출발 역 선택 */}
+              <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+                <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+                  <Send className="size-6 dark:fill-white ml-2" />
+                  <input
+                    className="size-full px-2 bg-transparent rounded-xl outline-none"
+                    type="text"
+                    list="platform"
+                    placeholder="출발역"
+                    value={schedule.startName}
+                    onChange={(e) =>
+                      updateSchedule({ ...schedule, startName: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+              {/* 도착 역 선택 */}
+              <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+                <label className="flex items-center cursor-text size-full rounded-xl focus-within:border-2 focus-within:border-blue-500">
+                  <Pin className="size-6 ml-2" />
+                  <input
+                    className="size-full px-2 bg-transparent rounded-xl outline-none"
+                    type="text"
+                    list="platform"
+                    placeholder="도착역"
+                    value={schedule.endName}
+                    onChange={(e) =>
+                      updateSchedule({ ...schedule, endName: e.target.value })
+                    }
+                  />
+                </label>
+              </div>
+              {/* 기차 종류 선택 */}
+              <div className="h-1/5 border-b border-gray-200 dark:border-gray-800">
+                {trainList().length > 0 ? (
+                  <select
+                    className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
+                    value={selectedTrainName}
+                    onChange={(e) => {
+                      setSelectedTrainName(e.target.value);
+                    }}
+                  >
+                    <option value={""}>열차 전체</option>
+                    {trainList().map((trainName) => (
+                      <option key={trainName} value={trainName}>
+                        {trainName}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p
+                    className="size-full text-center leading-[50px]"
+                    style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
+                  >
+                    {platformSelectionMessage()}
+                  </p>
+                )}
+              </div>
+              {/* 티켓 선택 */}
+              <div className="h-1/5">
+                {filterTrainTickets().length > 0 ? (
+                  <select
+                    className="size-full px-2 bg-transparent rounded-xl cursor-pointer"
+                    value={selectedTicket}
+                    onChange={(e) => setSelectedTicket(Number(e.target.value))}
+                  >
+                    <option value={0}>선택</option>
+                    {filterTrainTickets().map((ticket) => (
+                      <option key={ticket.trainno} value={ticket.trainno}>
+                        {`${
+                          selectedTrainName === ""
+                            ? ticket.traingradename + " / "
+                            : ""
+                        }
+                      ${getTime(ticket.depplandtime)} ~
+                      ${getTime(ticket.arrplandtime)}`}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p
+                    className="size-full text-center leading-[50px]"
+                    style={{ lineHeight: "50px" }} // mac safari 에서 leading-[50px] 안먹혀서 추가
+                  >
+                    {platformSelectionMessage()}
+                  </p>
+                )}
+              </div>
+            </div>
+          </SwipeableListItem>
+        </SwipeableList>
       </div>
-      {/* 일정 추가 버튼 */}
-      <button
-        className={`w-full my-5 max-w-[500px] h-12 rounded-xl border border-dashed border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700 group flex justify-center items-center
-          ${isClicked ? "animate-expand" : ""}`}
-        onClick={onClickAddSchedule}
-      >
-        <svg
-          className="size-8 fill-gray-200 group-hover:fill-gray-300 dark:fill-gray-800 dark:group-hover:fill-gray-700"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
-          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
-        </svg>
-      </button>
 
-      {/* todo dev 일정 제거 버튼 */}
-      {/* <button
-        className="w-full my-3 max-w-[100px] h-[50px] rounded-full bg-red-300 hover:bg-blue-300"
-        onClick={() => removeSchedule(schedule.id)}
-      >
-        지우기 test
-      </button> */}
+      {/* 일정 추가 버튼 */}
+      <AddScheduleBtn addSchedule={addSchedule} id={schedule.id} />
     </>
   );
 }

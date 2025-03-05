@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getYMDHM } from "@/lib/date";
 import Gap from "../_components/Gap";
 import { usePlatform } from "@/app/hooks/usePlatform";
+import AddScheduleBtn from "../_components/AddScheduleBtn";
 
 export default function Home() {
   const [positionY, setPositionY] = useState(0);
@@ -27,7 +28,19 @@ export default function Home() {
   ]);
 
   /** 일정 추가 */
-  const addSchedule = (id: string) => {
+  const addSchedule = (id: string | undefined) => {
+    if (!id) {
+      const value = schedules.toSpliced(0, 0, {
+        id: uuidv4(),
+        startTime: getYMDHM(new Date()),
+        startName: "",
+        endName: "",
+        trainName: "",
+        ticket: null,
+      });
+      setSchedules(value);
+      return;
+    }
     const index = schedules.findIndex((schedule) => schedule.id === id);
     if (index === -1) return;
     const value = schedules.toSpliced(index + 1, 0, {
@@ -109,7 +122,7 @@ export default function Home() {
     <div className="select-none relative flex w-dvw justify-center max-lg:flex-col max-lg:min-h-[calc(100dvh-4rem)] lg:w-[calc(100dvw-4rem)]">
       {/* Ctrl 영역 */}
       <div
-        className="p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="px-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 +
@@ -124,6 +137,10 @@ export default function Home() {
               <option key={v.nodeid} value={v.nodename} />
             ))}
           </datalist>
+
+          {/* 일정 추가 버튼 */}
+          <AddScheduleBtn addSchedule={addSchedule} />
+
           {schedules.map((schedule) => (
             <Ctrl
               key={schedule.id}
@@ -155,7 +172,7 @@ export default function Home() {
 
       {/* View 영역 */}
       <div
-        className="max-lg:bg-white dark:max-lg:bg-black p-3 pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="max-lg:bg-white dark:max-lg:bg-black px-3 pt-[88px] pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 -

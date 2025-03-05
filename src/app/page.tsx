@@ -1,29 +1,12 @@
 import Link from "next/link";
+import Logo from "@/assets/logo.svg";
 
 export default function Home() {
   return (
     <div className="flex h-dvh justify-center items-center">
       <div className="flex flex-col items-center gap-4">
         <div className="flex">
-          <svg
-            className="size-10 sm:size-12"
-            viewBox="0 0 256 256"
-            xmlns="http://www.w3.org/2000/svg"
-            stroke="currentColor"
-            strokeWidth="10"
-            strokeLinecap="round"
-          >
-            <path d="M28 84H228" />
-            <path d="M18 69L218 69" />
-            <path d="M212 108.961L228.641 84" />
-            <path d="M212 59L228.641 83.9615" />
-            <path d="M128 234L155.735 192.397" />
-            <path d="M127.735 233.603L100 192" />
-            <path d="M128 234L128 84" />
-            <path d="M113 211V99" />
-            <path d="M143 99L217 99" />
-            <path d="M143 211L143 114" />
-          </svg>
+          <Logo className="size-10 sm:size-12" />
           <h1 className="text-4xl sm:text-5xl font-bold">ransfer</h1>
         </div>
         <p className="mb-2 text-sm sm:text-base text-center px-2">
