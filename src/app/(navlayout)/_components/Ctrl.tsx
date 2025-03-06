@@ -77,7 +77,10 @@ export default function Ctrl({
 
   /* 티켓을 선택하면 일정에 추가 */
   useEffect(() => {
-    if (!selectedTicket) return;
+    if (!selectedTicket) {
+      resetTicket();
+      return;
+    }
     const ticket = filterTrainTickets().find(
       (ticket) => ticket.trainno === selectedTicket
     );
@@ -108,6 +111,7 @@ export default function Ctrl({
     );
   };
 
+  /** 역 선택 전 보여줄 메시지 */
   const platformSelectionMessage = () => {
     if (!schedule.startName && !schedule.endName) return "역을 선택 하세요.";
     if (!schedule.startName) return "출발역을 선택 하세요.";
@@ -117,6 +121,7 @@ export default function Ctrl({
     return "조건에 맞는 열차가 없습니다.";
   };
 
+  /** 스와이프 액션 */
   const trailingActions = () => (
     <TrailingActions>
       <SwipeAction
