@@ -71,7 +71,7 @@ export default function Home() {
 
   const { data: platform = [] } = usePlatform();
 
-  /* mobile 사이즈 조절 */
+  /* View 영역 사이즈 조절 */
   useEffect(() => {
     // 마우스 및 터치 공통 처리 함수
     const handleMove = (y: number) => {
@@ -172,7 +172,7 @@ export default function Home() {
 
       {/* View 영역 */}
       <div
-        className="max-lg:bg-white dark:max-lg:bg-black px-3 lg:pt-[88px] pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="max-lg:bg-white dark:max-lg:bg-black px-3 lg:pt-[88px] max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 -
@@ -189,6 +189,7 @@ export default function Home() {
                 <Gap
                   currentTicket={schedule.ticket}
                   nextTicket={schedules[index + 1]?.ticket}
+                  {...(index === schedules.length - 1 ? { schedules } : {})}
                 />
               </li>
             );

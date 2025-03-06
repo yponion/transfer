@@ -37,14 +37,6 @@ export default function Ctrl({
   /** 날짜 선택 리스트 */
   const ymdList = getYMDList(new Date());
 
-  const [isClicked, setIsClicked] = useState(false);
-  /** 스케줄 추가 버튼 눌렀을 때 애니메이션과 함께 스케줄 추가 */
-  const onClickAddSchedule = () => {
-    setIsClicked(true); // 애니메이션 클래스 추가
-    addSchedule(schedule.id); // 스케줄 추가
-    setTimeout(() => setIsClicked(false), 200); //  애니메이션 클래스 제거
-  };
-
   /** 역 이름으로 역 ID 화반환 */
   const getPlatformId = (platformName: string) => {
     if (platformName)

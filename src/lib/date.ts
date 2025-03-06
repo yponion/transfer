@@ -35,7 +35,7 @@ const mkDate = (num: number) => {
 };
 
 /** 날짜 차이 반환 (입력 형식: YYYYMMDDHHMM00) */
-export const getDifTime = (start: number, end: number) => {
+export const getDifTime = (start: number, end: number): number => {
   const startDate = mkDate(start);
   const endDate = mkDate(end);
   return endDate.diff(startDate, "minute");
