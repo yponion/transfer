@@ -63,13 +63,13 @@ export default function Gap({ currentTicket, nextTicket, schedules }: Props) {
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center flex-1">
-      <div className="text-sm">
+      <div className="text-sm  text-center">
         총 소요시간:{" "}
         <span className="text-base font-semibold">
           {formatDuration(totalTime)}
         </span>
       </div>
-      <div className="text-sm">
+      <div className="text-sm text-center">
         {`기차: ${formatDuration(trainTime)} / 대기: ${formatDuration(
           totalTime - trainTime
         )}`}
