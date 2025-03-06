@@ -63,7 +63,7 @@ export default function Gap({ currentTicket, nextTicket, schedules }: Props) {
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center flex-1">
-      <div className="text-sm  text-center">
+      <div className="text-sm text-center">
         총 소요시간:{" "}
         <span className="text-base font-semibold">
           {formatDuration(totalTime)}
@@ -74,7 +74,7 @@ export default function Gap({ currentTicket, nextTicket, schedules }: Props) {
           totalTime - trainTime
         )}`}
       </div>
-      <div className="text-sm">
+      <div className="text-sm text-center">
         총 요금:{" "}
         <span className="text-base font-semibold">
           {totalPrice.toLocaleString("ko-KR")}원
