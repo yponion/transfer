@@ -172,7 +172,7 @@ export default function Home() {
 
       {/* View 영역 */}
       <div
-        className="max-lg:bg-white dark:max-lg:bg-black px-3 pt-[88px] pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
+        className="max-lg:bg-white dark:max-lg:bg-black px-3 lg:pt-[88px] pb-10 max-lg:w-full lg:min-h-dvh overflow-y-scroll max-lg:h-[calc((100dvh-4rem)/2)] lg:flex-1 lg:overflow-y-hidden"
         style={{
           height: positionY
             ? (window.innerHeight - 64) / 2 -
