@@ -37,14 +37,6 @@ export default function Ctrl({
   /** 날짜 선택 리스트 */
   const ymdList = getYMDList(new Date());
 
-  const [isClicked, setIsClicked] = useState(false);
-  /** 스케줄 추가 버튼 눌렀을 때 애니메이션과 함께 스케줄 추가 */
-  const onClickAddSchedule = () => {
-    setIsClicked(true); // 애니메이션 클래스 추가
-    addSchedule(schedule.id); // 스케줄 추가
-    setTimeout(() => setIsClicked(false), 200); //  애니메이션 클래스 제거
-  };
-
   /** 역 이름으로 역 ID 화반환 */
   const getPlatformId = (platformName: string) => {
     if (platformName)
@@ -85,7 +77,10 @@ export default function Ctrl({
 
   /* 티켓을 선택하면 일정에 추가 */
   useEffect(() => {
-    if (!selectedTicket) return;
+    if (!selectedTicket) {
+      resetTicket();
+      return;
+    }
     const ticket = filterTrainTickets().find(
       (ticket) => ticket.trainno === selectedTicket
     );
@@ -116,6 +111,7 @@ export default function Ctrl({
     );
   };
 
+  /** 역 선택 전 보여줄 메시지 */
   const platformSelectionMessage = () => {
     if (!schedule.startName && !schedule.endName) return "역을 선택 하세요.";
     if (!schedule.startName) return "출발역을 선택 하세요.";
@@ -125,6 +121,7 @@ export default function Ctrl({
     return "조건에 맞는 열차가 없습니다.";
   };
 
+  /** 스와이프 액션 */
   const trailingActions = () => (
     <TrailingActions>
       <SwipeAction
