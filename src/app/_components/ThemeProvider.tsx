@@ -21,5 +21,12 @@ export default function ThemeProvider({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // 첫 렌더링시에도 웹뷰 -> RN 화면 모드 전송
+  useEffect(() => {
+    const mode = localStorage.getItem("theme");
+    if (!mode) return;
+    if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(mode);
+  }, []);
+
   return children;
 }
