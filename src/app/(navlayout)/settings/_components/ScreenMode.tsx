@@ -35,6 +35,10 @@ export default function ScreenMode() {
 
   const changeScreenMode = (mode: string) => {
     setSelected(mode);
+
+    // 웹뷰 -> RN 화면 모드 전송
+    if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(mode);
+
     if (mode === "light") {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
